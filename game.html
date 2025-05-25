@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        window.onload = function() {
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+
+        let map=[[0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0]]
+
+        for(let u=0;u<10;u++){
+            for(let i=0;i<10;i++){
+                let random = Math.floor( Math.random() * 3);
+                map[u][i]=random
+            }
+        }
+        console.log(map)
+
+    canvas.addEventListener('mousedown', function(event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+       
+        mx=Math.trunc(x/50)
+        my=Math.trunc(y/50)
+        console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
+        console.log("mx="+mx+"my="+my)
+        check(map,mx,my)
+        map[my][mx]=10
+
+        });
+    const check=(map,mx,my)=>{
+        let stk=[[my,mx]]
+        let c=map[my][mx]//色
+        let path=[]//通ったところ
+        
+        while (true){
+        let a=stk.shift()//着目点   
+        let ct=0
+
+        
+
+        if(a[0]-1>=0){
+            if(map[a[0]-1][a[1]]==c){//着目点の上を調べて同じ色だったらスタックに追加する
+                stk.push([a[0]-1,a[1]])
+                ct+=1
+            }
+        }
+        if(a[0]+1<=9){
+            if(map[a[0]+1][a[1]]==c){//下
+                stk.push([a[0]+1,a[1]])
+                ct+=1
+            }
+        }
+        if(a[1]-1>=0){
+            if(map[a[0]][a[1]-1]==c){//左
+                stk.push([a[0],a[1]-1])
+                ct+=1
+            }
+        }
+        if(a[1]+1<=9){
+            if(map[a[0]][a[1]+1]==c){//右
+                stk.push([a[0],a[1]+1])
+                ct+=1
+            }
+        }
+        console.log("stk"+stk)
+        console.log("ct="+ct)
+        if(stk.length==0){break}//スタックが空になったら抜けだす
+        if(ct===0){break}
+        map[a[0]][a[1]]=10
+        
+        }
+        
+        
+
+        
+    }
+    
+    
+
+
+        function draw_flame(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
+
+            for(let i=0;i<10;i++){  
+              for(let u=0;u<10;u++){
+                if(map[i][u]==0){
+                    ctx.fillStyle = 'blue';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };
+                if(map[i][u]==1){
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };
+                if(map[i][u]==2){
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };
+                if(map[i][u]==10){
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };
+              }  
+            }
+            requestAnimationFrame(draw_flame)
+        };
+        draw_flame();
+        
+
+    }
+
+    </script>
+</body>
+</html>

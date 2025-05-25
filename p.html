@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        ty=2
+        tx=1
+        stk=[]
+        map=[[0,1,0,1],
+        [0,1,0,0],
+        [0,1,1,0],
+        [0,0,1,0]]
+        console.log(map[0][2])
+        c=map[ty][tx]
+        if(map[ty-1][tx]=c){stk.push([ty-1,tx])}
+        if(map[ty+1][tx]=c){stk.push([ty+1,tx])}
+        if(map[ty][tx-1]=c){stk.push([ty,tx-1])}
+        if(map[ty][tx+1]=c){stk.push([ty,tx+1])}
+    </script>
+</body>
+</html>
