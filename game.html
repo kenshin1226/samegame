@@ -41,7 +41,9 @@
         my=Math.trunc(y/50)
         console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
         console.log("mx="+mx+"my="+my)
-        check(map,mx,my)
+        if(map[my][mx]!==10){
+            check(map,mx,my)
+        }
         map[my][mx]=10
 
         });
@@ -52,20 +54,23 @@
         
         while (true){
         let a=stk.shift()//着目点   
-        
-        map[a[0]][a[1]]=10//着目点を白く塗る
+        let x=a[1]
+        let y=a[0]
+        let ct=0
+        map[y][x]=10//着目点を白く塗る
+        path.push([y,x])
 
-        if(a[0]-1>=0){
-            if(map[a[0]-1][a[1]]==c){stk.push([a[0]-1,a[1]])}//着目点の上を調べて同じ色だったらスタックに追加する
+        if(y-1>=0){
+            if(map[y-1][x]==c){stk.push([y-1,x])}//着目点の上を調べて同じ色だったらスタックに追加する
         }
-        if(a[0]+1<=9){
-            if(map[a[0]+1][a[1]]==c){stk.push([a[0]+1,a[1]])}//下
+        if(y+1<=9){
+            if(map[y+1][x]==c){stk.push([y+1,x])}//下
         }
-        if(a[1]-1>=0){
-            if(map[a[0]][a[1]-1]==c){stk.push([a[0],a[1]-1])}//左
+        if(x-1>=0){
+            if(map[y][x-1]==c){stk.push([y,x-1])}//左
         }
-        if(a[1]+1<=9){
-            if(map[a[0]][a[1]+1]==c){stk.push([a[0],a[1]+1])}//右
+        if(x+1<=9){
+            if(map[y][x+1]==c){stk.push([y,x+1])}//右
         }
         console.log("stk"+stk)
 
