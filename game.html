@@ -52,40 +52,24 @@
         
         while (true){
         let a=stk.shift()//着目点   
-        let ct=0
-
         
+        map[a[0]][a[1]]=10//着目点を白く塗る
 
         if(a[0]-1>=0){
-            if(map[a[0]-1][a[1]]==c){//着目点の上を調べて同じ色だったらスタックに追加する
-                stk.push([a[0]-1,a[1]])
-                ct+=1
-            }
+            if(map[a[0]-1][a[1]]==c){stk.push([a[0]-1,a[1]])}//着目点の上を調べて同じ色だったらスタックに追加する
         }
         if(a[0]+1<=9){
-            if(map[a[0]+1][a[1]]==c){//下
-                stk.push([a[0]+1,a[1]])
-                ct+=1
-            }
+            if(map[a[0]+1][a[1]]==c){stk.push([a[0]+1,a[1]])}//下
         }
         if(a[1]-1>=0){
-            if(map[a[0]][a[1]-1]==c){//左
-                stk.push([a[0],a[1]-1])
-                ct+=1
-            }
+            if(map[a[0]][a[1]-1]==c){stk.push([a[0],a[1]-1])}//左
         }
         if(a[1]+1<=9){
-            if(map[a[0]][a[1]+1]==c){//右
-                stk.push([a[0],a[1]+1])
-                ct+=1
-            }
+            if(map[a[0]][a[1]+1]==c){stk.push([a[0],a[1]+1])}//右
         }
         console.log("stk"+stk)
-        console.log("ct="+ct)
+
         if(stk.length==0){break}//スタックが空になったら抜けだす
-        if(ct===0){break}
-        map[a[0]][a[1]]=10
-        
         }
         
         
