@@ -44,7 +44,7 @@
         if(map[my][mx]!==10){
             check(map,mx,my)
         }
-        map[my][mx]=10
+        
 
         });
     const check=(map,mx,my)=>{
@@ -57,9 +57,9 @@
         let x=a[1]
         let y=a[0]
         let ct=0
-        map[y][x]=10//着目点を白く塗る
+        
         path.push([y,x])
-
+        map[y][x]=10//着目点を白く塗る
         if(y-1>=0){
             if(map[y-1][x]==c){stk.push([y-1,x])}//着目点の上を調べて同じ色だったらスタックに追加する
         }
@@ -73,7 +73,13 @@
             if(map[y][x+1]==c){stk.push([y,x+1])}//右
         }
         console.log("stk"+stk)
-
+        if(path.length===1){
+            if(stk.length===0){
+                map[y][x]=c
+                break
+            }
+        }
+        
         if(stk.length==0){break}//スタックが空になったら抜けだす
         }
         
