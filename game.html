@@ -13,7 +13,7 @@
         const ctx = canvas.getContext("2d");
 
 
-        let map=[[0,0,0,0,0,0,0,0,0,0],
+        let map1=[[0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0],
@@ -27,10 +27,11 @@
         for(let u=0;u<10;u++){
             for(let i=0;i<10;i++){
                 let random = Math.floor( Math.random() * 3);
-                map[u][i]=random
+                map1[u][i]=random
             }
         }
-        console.log(map)
+        console.log(map1)
+   
 
     canvas.addEventListener('mousedown', function(event) {
         const x = event.offsetX;
@@ -41,17 +42,45 @@
         my=Math.trunc(y/50)
         console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
         console.log("mx="+mx+"my="+my)
-        if(map[my][mx]!==10){
-            check(map,mx,my)
+        if(map1[my][mx]!==10){
+            check(map1,mx,my)
         }
-        console.log(map)
-        fall(map)
-        
+        console.log(map1)
+        map1=fall(map1)
+        anime(map1)
 
         });
-    const check=(map,mx,my)=>{
+
+    const anime=(map1)=>{    
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
+
+    for(let i=0;i<10;i++){  
+        for(let u=0;u<10;u++){
+            if(map1[i][u]==0){
+                ctx.fillStyle = 'blue';
+                ctx.fillRect(u*50,i*50,50,50);
+            };
+            if(map1[i][u]==1){
+                ctx.fillStyle = 'red';
+                ctx.fillRect(u*50,i*50,50,50);
+            };
+            if(map1[i][u]==2){
+                ctx.fillStyle = 'green';
+                ctx.fillRect(u*50,i*50,50,50);
+            };
+            if(map1[i][u]==10){
+                ctx.fillStyle = 'white';
+                ctx.fillRect(u*50,i*50,50,50);
+            };
+            }  
+            }
+
+        }
+    anime()
+    
+    const check=(map1,mx,my)=>{
         let stk=[[my,mx]]
-        let c=map[my][mx]//色
+        let c=map1[my][mx]//色
         let path=[]//通ったところ
         
         while (true){
@@ -61,23 +90,23 @@
         let ct=0
         
         path.push([y,x])
-        map[y][x]=10//着目点を白く塗る
+        map1[y][x]=10//着目点を白く塗る
         if(y-1>=0){
-            if(map[y-1][x]==c){stk.push([y-1,x])}//着目点の上を調べて同じ色だったらスタックに追加する
+            if(map1[y-1][x]==c){stk.push([y-1,x])}//着目点の上を調べて同じ色だったらスタックに追加する
         }
         if(y+1<=9){
-            if(map[y+1][x]==c){stk.push([y+1,x])}//下
+            if(map1[y+1][x]==c){stk.push([y+1,x])}//下
         }
         if(x-1>=0){
-            if(map[y][x-1]==c){stk.push([y,x-1])}//左
+            if(map1[y][x-1]==c){stk.push([y,x-1])}//左
         }
         if(x+1<=9){
-            if(map[y][x+1]==c){stk.push([y,x+1])}//右
+            if(map1[y][x+1]==c){stk.push([y,x+1])}//右
         }
         console.log("stk"+stk)
         if(path.length===1){
             if(stk.length===0){
-                map[y][x]=c
+                map1[y][x]=c
                 break
             }
         }
@@ -91,7 +120,7 @@
 
 
 
-    const fall=(map)=>{
+    const fall=(map1)=>{
         let map2=[[10,10,10,10,10,10,10,10,10,10],
                 [10,10,10,10,10,10,10,10,10,10],
                 [10,10,10,10,10,10,10,10,10,10],
@@ -108,43 +137,20 @@
         for(let u=0;u<10;u++){
             ct2=0
             for(let i=0;i<10;i++){
-                if(map[9-i][u]!=10){
-                    map2[9-ct2][u]=map[9-i][u]
+                if(map1[9-i][u]!=10){
+                    map2[9-ct2][u]=map1[9-i][u]
                     ct2+=1
                 }
             }
         }
+        
         console.log("map2")
         console.log(map2)
-        let map = JSON.parse(JSON.stringify(map2));
+        // let map = JSON.parse(JSON.stringify(map2));
+        return map2
     }
 
-        function draw_flame(){
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
 
-            for(let i=0;i<10;i++){  
-              for(let u=0;u<10;u++){
-                if(map[i][u]==0){
-                    ctx.fillStyle = 'blue';
-                    ctx.fillRect(u*50,i*50,50,50);
-                };
-                if(map[i][u]==1){
-                    ctx.fillStyle = 'red';
-                    ctx.fillRect(u*50,i*50,50,50);
-                };
-                if(map[i][u]==2){
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(u*50,i*50,50,50);
-                };
-                if(map[i][u]==10){
-                    ctx.fillStyle = 'white';
-                    ctx.fillRect(u*50,i*50,50,50);
-                };
-              }  
-            }
-            requestAnimationFrame(draw_flame)
-        };
-        draw_flame();
         }
     </script>
 </body>
