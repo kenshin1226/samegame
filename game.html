@@ -47,6 +47,7 @@
         }
         console.log(map1)
         map1=fall(map1)
+        map1=send(map1)
         anime(map1)
 
         });
@@ -76,7 +77,7 @@
             }
 
         }
-    anime()
+    anime(map1)
     
     const check=(map1,mx,my)=>{
         let stk=[[my,mx]]
@@ -143,11 +144,68 @@
                 }
             }
         }
+ 
         
         console.log("map2")
         console.log(map2)
         // let map = JSON.parse(JSON.stringify(map2));
         return map2
+    }
+
+    const send=(map1)=>{
+        let map3=[[10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10]]
+
+        let wct=0
+        let memo=[]//全部白い列をメモ
+        let indexb=0
+
+        for(let u=0;u<10;u++){
+            wct=0
+            for(let i=0;i<10;i++){
+                if(map1[i][u]==10){
+                    wct+=1
+                }
+                if(wct==10){
+                    memo.push(u)
+                }
+            }
+        }
+        console.log("memo="+memo)
+        //mome=[0,2]
+        let memoindex=0
+        //memo[memoindex]
+
+        for(let r=0;r<10;r++){
+            if(r==memo[memoindex]){
+                console.log("空")
+                console.log("r="+r)
+                memoindex+=1
+            }
+            else{
+                console.log("空ではない")
+                console.log("indexb="+indexb)
+                for(let g=0;g<10;g++){
+                    map3[g][indexb]=map1[g][r]
+                }
+                indexb+=1
+            }
+        }
+        console.log("map3")
+        console.log(map3)
+        return map3
+
+
+        
+
     }
 
 
