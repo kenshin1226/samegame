@@ -48,8 +48,8 @@
         console.log(map1)
         map1=fall(map1)
         map1=send(map1)
+        referee(map1)
         anime(map1)
-
         });
 
     const anime=(map1)=>{    
@@ -186,13 +186,9 @@
 
         for(let r=0;r<10;r++){
             if(r==memo[memoindex]){
-                console.log("空")
-                console.log("r="+r)
                 memoindex+=1
             }
             else{
-                console.log("空ではない")
-                console.log("indexb="+indexb)
                 for(let g=0;g<10;g++){
                     map3[g][indexb]=map1[g][r]
                 }
@@ -207,7 +203,45 @@
         
 
     }
-
+    const referee=(map1)=>{
+        let wl=false
+        let cc=0
+        let abc=false
+        for(let i=0;i<10;i++){
+            for(let r=0;r<10;r++){
+                if(map1[i][r]!=10){
+                    cc+=1
+                }
+            }
+        }
+        if(cc==0){
+            wl=true
+            console.log("勝利")
+        }
+        for(let i=0;i<10;i++){
+            for(let r=0;r<10;r++){
+                if(map1[i][r]!=10){
+                    if(i-1>=0){
+                        if(map1[i-1][r]==map1[i][r]){abc=true}//上
+                    }
+                    if(i+1<=9){
+                        if(map1[i+1][r]==map1[i][r]){abc=true}//下
+                    }
+                    if(r-1>=0){
+                        if(map1[i][r-1]==map1[i][r]){abc=true}//左
+                    }
+                    if(r+1<=9){
+                        if(map1[i][r+1]==map1[i][r]){abc=true}//右
+                    }
+                }
+            }
+        }
+        if(abc==false){
+            wl=false
+            console.log("敗北")
+        }
+    }
+    
 
         }
     </script>
