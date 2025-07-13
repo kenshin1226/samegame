@@ -12,74 +12,26 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
+        
+const makemap=(tate,yoko,colorva)=>{    
 
-        let map1=[[0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0]]
+        let map1=[]
 
-        for(let u=0;u<10;u++){
-            for(let i=0;i<10;i++){
-                let random = Math.floor( Math.random() * 3);
-                map1[u][i]=random
+        for(let u=0;u<tate;u++){
+            b_map=[]
+            for(let i=0;i<yoko;i++){
+                let random = Math.floor( Math.random() * colorva);
+                b_map.push(random)
             }
+            map1.push(b_map)
         }
         console.log(map1)
-   
-
-    canvas.addEventListener('mousedown', function(event) {
-        const x = event.offsetX;
-        const y = event.offsetY;
-
-       
-        mx=Math.trunc(x/50)
-        my=Math.trunc(y/50)
-        console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
-        console.log("mx="+mx+"my="+my)
-        if(map1[my][mx]!==10){
-            check(map1,mx,my)
-        }
-        console.log(map1)
-        map1=fall(map1)
-        map1=send(map1)
-        referee(map1)
-        anime(map1)
-        });
-
-    const anime=(map1)=>{    
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
-
-    for(let i=0;i<10;i++){  
-        for(let u=0;u<10;u++){
-            if(map1[i][u]==0){
-                ctx.fillStyle = 'blue';
-                ctx.fillRect(u*50,i*50,50,50);
-            };
-            if(map1[i][u]==1){
-                ctx.fillStyle = 'red';
-                ctx.fillRect(u*50,i*50,50,50);
-            };
-            if(map1[i][u]==2){
-                ctx.fillStyle = 'green';
-                ctx.fillRect(u*50,i*50,50,50);
-            };
-            if(map1[i][u]==10){
-                ctx.fillStyle = 'white';
-                ctx.fillRect(u*50,i*50,50,50);
-            };
-            }  
-            }
-
-        }
-    anime(map1)
-    
-    const check=(map1,mx,my)=>{
+        return map1
+    }
+const tate=5
+const yoko=10
+let map1=makemap(tate,yoko,3)
+const check=(map1,mx,my)=>{
         let stk=[[my,mx]]
         let c=map1[my][mx]//色
         let path=[]//通ったところ
@@ -116,12 +68,7 @@
         }
         
     }
-    
-
-
-
-
-    const fall=(map1)=>{
+const fall=(map1)=>{
         let map2=[[10,10,10,10,10,10,10,10,10,10],
                 [10,10,10,10,10,10,10,10,10,10],
                 [10,10,10,10,10,10,10,10,10,10],
@@ -151,7 +98,6 @@
         // let map = JSON.parse(JSON.stringify(map2));
         return map2
     }
-
     const send=(map1)=>{
         let map3=[[10,10,10,10,10,10,10,10,10,10],
         [10,10,10,10,10,10,10,10,10,10],
@@ -203,10 +149,36 @@
         
 
     }
+    //詰みか詰みではないかの判定をする
     const referee=(map1)=>{
-        let wl=false
-        let cc=0
-        let abc=false
+        
+        let isTsumi=true
+
+        //色のあるブロックの隣に同じ色のブロックがあるか調べる
+        for(let i=0;i<10;i++){
+            for(let r=0;r<10;r++){
+                if(map1[i][r]!=10){
+                    if(i-1>=0){
+                        if(map1[i-1][r]==map1[i][r]){isTsumi=false}//上
+                    }
+                    if(i+1<=9){
+                        if(map1[i+1][r]==map1[i][r]){isTsumi=false}//下
+                    }
+                    if(r-1>=0){
+                        if(map1[i][r-1]==map1[i][r]){isTsumi=false}//左
+                    }
+                    if(r+1<=9){
+                        if(map1[i][r+1]==map1[i][r]){isTsumi=false}//右
+                    }
+                }
+            }
+        }
+    
+        return isTsumi
+    }
+    const score=(map1)=>{
+        let cc=0//残っているブロックの数
+        //色のあるブロックの数を数える
         for(let i=0;i<10;i++){
             for(let r=0;r<10;r++){
                 if(map1[i][r]!=10){
@@ -214,36 +186,64 @@
                 }
             }
         }
-        if(cc==0){
-            wl=true
-            console.log("勝利")
-        }
-        for(let i=0;i<10;i++){
-            for(let r=0;r<10;r++){
-                if(map1[i][r]!=10){
-                    if(i-1>=0){
-                        if(map1[i-1][r]==map1[i][r]){abc=true}//上
-                    }
-                    if(i+1<=9){
-                        if(map1[i+1][r]==map1[i][r]){abc=true}//下
-                    }
-                    if(r-1>=0){
-                        if(map1[i][r-1]==map1[i][r]){abc=true}//左
-                    }
-                    if(r+1<=9){
-                        if(map1[i][r+1]==map1[i][r]){abc=true}//右
-                    }
-                }
-            }
-        }
-        if(abc==false){
-            wl=false
-            console.log("敗北")
-        }
+        return cc
     }
-    
+    canvas.addEventListener('mousedown', function(event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
 
+       
+        mx=Math.trunc(x/50)
+        my=Math.trunc(y/50)
+        console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
+        console.log("mx="+mx+"my="+my)
+        if(map1[my][mx]!==10){
+            check(map1,mx,my)
         }
+        console.log(map1)
+        map1=fall(map1)
+        map1=send(map1)
+        let isTumi=referee(map1)
+        let tensu=score(map1)
+        anime(map1,isTumi,tensu,tate,yoko)
+    });
+
+    const anime=(map1,isTumi,tensu,tate,yoko)=>{    
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
+
+        for(let i=0;i<tate;i++){  
+            for(let u=0;u<yoko;u++){
+                if(map1[i][u]==0){
+                    ctx.fillStyle = 'blue';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };
+                if(map1[i][u]==1){
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };
+                if(map1[i][u]==2){
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };
+                if(map1[i][u]==10){
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };
+            }  
+        }
+        ctx.font = '55px Arial'; // フォント設定
+        ctx.fillStyle = 'blue';   
+        console.log("isTumi="+isTumi)
+        if(isTumi===true){
+            ctx.fillText('終わりました', 20, 100); // (20, 100)の位置に文字を表示
+            ctx.fillText('あなたの点数は'+tensu+"です", 20, 150); // (20, 100)の位置に文字を表示
+        }
+
+    }      
+
+
+    anime(map1,false,5)
+}
     </script>
 </body>
 </html>
