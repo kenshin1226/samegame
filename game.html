@@ -47,13 +47,13 @@ const check=(map1,mx,my)=>{
         if(y-1>=0){
             if(map1[y-1][x]==c){stk.push([y-1,x])}//着目点の上を調べて同じ色だったらスタックに追加する
         }
-        if(y+1<=9){
+        if(y+1<=tate){
             if(map1[y+1][x]==c){stk.push([y+1,x])}//下
         }
         if(x-1>=0){
             if(map1[y][x-1]==c){stk.push([y,x-1])}//左
         }
-        if(x+1<=9){
+        if(x+1<=yoko){
             if(map1[y][x+1]==c){stk.push([y,x+1])}//右
         }
         console.log("stk"+stk)
@@ -82,11 +82,11 @@ const fall=(map1)=>{
         let ct=0//map1のカウンター
         let ct2=0//map2のカウンター。0が出たら動かない
 
-        for(let u=0;u<10;u++){
+        for(let u=0;u<tate;u++){
             ct2=0
-            for(let i=0;i<10;i++){
-                if(map1[9-i][u]!=10){
-                    map2[9-ct2][u]=map1[9-i][u]
+            for(let i=0;i<yoko;i++){
+                if(map1[yoko-1-i][u]!=10){
+                    map2[yoko-1-ct2][u]=map1[yoko-1-i][u]
                     ct2+=1
                 }
             }
@@ -242,7 +242,7 @@ const fall=(map1)=>{
     }      
 
 
-    anime(map1,false,5)
+    anime(map1,false,0,tate,yoko)
 }
     </script>
 </body>
