@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        window.onload = function() {
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+
+        let map1=[[0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0]]
+
+        for(let u=0;u<10;u++){
+            for(let i=0;i<10;i++){
+                let random = Math.floor( Math.random() * 3);
+                map1[u][i]=random
+            }
+        }
+        console.log(map1)
+   
+
+    canvas.addEventListener('mousedown', function(event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+       
+        mx=Math.trunc(x/50)
+        my=Math.trunc(y/50)
+        console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
+        console.log("mx="+mx+"my="+my)
+        if(map1[my][mx]!==10){
+            check(map1,mx,my)
+        }
+        console.log(map1)
+        map1=fall(map1)
+        map1=send(map1)
+        referee(map1)
+        anime(map1)
+        });
+
+    const anime=(map1)=>{    
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
+
+    for(let i=0;i<10;i++){  
+        for(let u=0;u<10;u++){
+            if(map1[i][u]==0){
+                ctx.fillStyle = 'blue';
+                ctx.fillRect(u*50,i*50,50,50);
+            };
+            if(map1[i][u]==1){
+                ctx.fillStyle = 'red';
+                ctx.fillRect(u*50,i*50,50,50);
+            };
+            if(map1[i][u]==2){
+                ctx.fillStyle = 'green';
+                ctx.fillRect(u*50,i*50,50,50);
+            };
+            if(map1[i][u]==10){
+                ctx.fillStyle = 'white';
+                ctx.fillRect(u*50,i*50,50,50);
+            };
+            }  
+            }
+
+        }
+    anime(map1)
+    
+    const check=(map1,mx,my)=>{
+        let stk=[[my,mx]]
+        let c=map1[my][mx]//色
+        let path=[]//通ったところ
+        
+        while (true){
+        let a=stk.shift()//着目点   
+        let x=a[1]
+        let y=a[0]
+        let ct=0
+        
+        path.push([y,x])
+        map1[y][x]=10//着目点を白く塗る
+        if(y-1>=0){
+            if(map1[y-1][x]==c){stk.push([y-1,x])}//着目点の上を調べて同じ色だったらスタックに追加する
+        }
+        if(y+1<=9){
+            if(map1[y+1][x]==c){stk.push([y+1,x])}//下
+        }
+        if(x-1>=0){
+            if(map1[y][x-1]==c){stk.push([y,x-1])}//左
+        }
+        if(x+1<=9){
+            if(map1[y][x+1]==c){stk.push([y,x+1])}//右
+        }
+        console.log("stk"+stk)
+        if(path.length===1){
+            if(stk.length===0){
+                map1[y][x]=c
+                break
+            }
+        }
+        
+        if(stk.length==0){break}//スタックが空になったら抜けだす
+        }
+        
+    }
+    
+
+
+
+
+    const fall=(map1)=>{
+        let map2=[[10,10,10,10,10,10,10,10,10,10],
+                [10,10,10,10,10,10,10,10,10,10],
+                [10,10,10,10,10,10,10,10,10,10],
+                [10,10,10,10,10,10,10,10,10,10],
+                [10,10,10,10,10,10,10,10,10,10],
+                [10,10,10,10,10,10,10,10,10,10],
+                [10,10,10,10,10,10,10,10,10,10],
+                [10,10,10,10,10,10,10,10,10,10],
+                [10,10,10,10,10,10,10,10,10,10],
+                [10,10,10,10,10,10,10,10,10,10]]
+        let ct=0//map1のカウンター
+        let ct2=0//map2のカウンター。0が出たら動かない
+
+        for(let u=0;u<10;u++){
+            ct2=0
+            for(let i=0;i<10;i++){
+                if(map1[9-i][u]!=10){
+                    map2[9-ct2][u]=map1[9-i][u]
+                    ct2+=1
+                }
+            }
+        }
+ 
+        
+        console.log("map2")
+        console.log(map2)
+        // let map = JSON.parse(JSON.stringify(map2));
+        return map2
+    }
+
+    const send=(map1)=>{
+        let map3=[[10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10],
+        [10,10,10,10,10,10,10,10,10,10]]
+
+        let wct=0
+        let memo=[]//全部白い列をメモ
+        let indexb=0
+
+        for(let u=0;u<10;u++){
+            wct=0
+            for(let i=0;i<10;i++){
+                if(map1[i][u]==10){
+                    wct+=1
+                }
+                if(wct==10){
+                    memo.push(u)
+                }
+            }
+        }
+        console.log("memo="+memo)
+        //mome=[0,2]
+        let memoindex=0
+        //memo[memoindex]
+
+        for(let r=0;r<10;r++){
+            if(r==memo[memoindex]){
+                memoindex+=1
+            }
+            else{
+                for(let g=0;g<10;g++){
+                    map3[g][indexb]=map1[g][r]
+                }
+                indexb+=1
+            }
+        }
+        console.log("map3")
+        console.log(map3)
+        return map3
+
+
+        
+
+    }
+    const referee=(map1)=>{
+        let wl=false
+        let cc=0
+        let abc=false
+        for(let i=0;i<10;i++){
+            for(let r=0;r<10;r++){
+                if(map1[i][r]!=10){
+                    cc+=1
+                }
+            }
+        }
+        if(cc==0){
+            wl=true
+            console.log("勝利")
+        }
+        for(let i=0;i<10;i++){
+            for(let r=0;r<10;r++){
+                if(map1[i][r]!=10){
+                    if(i-1>=0){
+                        if(map1[i-1][r]==map1[i][r]){abc=true}//上
+                    }
+                    if(i+1<=9){
+                        if(map1[i+1][r]==map1[i][r]){abc=true}//下
+                    }
+                    if(r-1>=0){
+                        if(map1[i][r-1]==map1[i][r]){abc=true}//左
+                    }
+                    if(r+1<=9){
+                        if(map1[i][r+1]==map1[i][r]){abc=true}//右
+                    }
+                }
+            }
+        }
+        if(abc==false){
+            wl=false
+            console.log("敗北")
+        }
+    }
+    
+
+        }
+    </script>
+</body>
+</html>
