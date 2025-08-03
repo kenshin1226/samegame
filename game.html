@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas" width="1000" height="1000"></canvas>
     <script>
         window.onload = function() {
         const canvas = document.getElementById("gameCanvas");
@@ -28,10 +28,11 @@ const makemap=(tate,yoko,colorva)=>{
         console.log(map1)
         return map1
     }
-const tate=5
+const tate=10
 const yoko=10
-let map1=makemap(tate,yoko,3)
+let map1=makemap(tate,yoko,5)
 const check=(map1,mx,my)=>{
+//タップしたマスと同じ色のマスを白くする
         let stk=[[my,mx]]
         let c=map1[my][mx]//色
         let path=[]//通ったところ
@@ -47,13 +48,14 @@ const check=(map1,mx,my)=>{
         if(y-1>=0){
             if(map1[y-1][x]==c){stk.push([y-1,x])}//着目点の上を調べて同じ色だったらスタックに追加する
         }
-        if(y+1<=tate){
+        console.log("x="+x+"y="+y)
+        if(y+1<=tate-1){
             if(map1[y+1][x]==c){stk.push([y+1,x])}//下
         }
         if(x-1>=0){
             if(map1[y][x-1]==c){stk.push([y,x-1])}//左
         }
-        if(x+1<=yoko){
+        if(x+1<=yoko-1){
             if(map1[y][x+1]==c){stk.push([y,x+1])}//右
         }
         console.log("stk"+stk)
@@ -97,7 +99,9 @@ const fall=(map1)=>{
         return map2
     }
     const send=(map1)=>{
+        console.log("102"+map1)
         let map3=[]
+        //白しかないマップを作る
         for(let u=0;u<tate;u++){
             b_map=[]
             for(let i=0;i<yoko;i++){            
@@ -106,17 +110,17 @@ const fall=(map1)=>{
             map3.push(b_map)
         }
 
-        let wct=0
+        let wct=0//白い列をカウントするために使う
         let memo=[]//全部白い列をメモ
         let indexb=0
 
-        for(let u=0;u<tate;u++){
+        for(let u=0;u<yoko;u++){
             wct=0
-            for(let i=0;i<yoko;i++){
+            for(let i=0;i<tate;i++){
                 if(map1[i][u]==10){
                     wct+=1
                 }
-                if(wct==10){
+                if(wct==tate){
                     memo.push(u)
                 }
             }
@@ -124,14 +128,14 @@ const fall=(map1)=>{
         console.log("memo="+memo)
         //mome=[0,2]
         let memoindex=0
-        //memo[memoindex]
-
-        for(let r=0;r<10;r++){
+        
+        //実際に左に寄せる
+        for(let r=0;r<yoko;r++){
             if(r==memo[memoindex]){
                 memoindex+=1
             }
             else{
-                for(let g=0;g<10;g++){
+                for(let g=0;g<tate;g++){
                     map3[g][indexb]=map1[g][r]
                 }
                 indexb+=1
@@ -151,19 +155,19 @@ const fall=(map1)=>{
         let isTsumi=true
 
         //色のあるブロックの隣に同じ色のブロックがあるか調べる
-        for(let i=0;i<10;i++){
-            for(let r=0;r<10;r++){
-                if(map1[i][r]!=10){
+        for(let i=0;i<tate;i++){
+            for(let r=0;r<yoko;r++){
+                if(map1[i][r]!==10){
                     if(i-1>=0){
                         if(map1[i-1][r]==map1[i][r]){isTsumi=false}//上
                     }
-                    if(i+1<=9){
+                    if(i+1<=tate-1){
                         if(map1[i+1][r]==map1[i][r]){isTsumi=false}//下
                     }
                     if(r-1>=0){
                         if(map1[i][r-1]==map1[i][r]){isTsumi=false}//左
                     }
-                    if(r+1<=9){
+                    if(r+1<=yoko-1){
                         if(map1[i][r+1]==map1[i][r]){isTsumi=false}//右
                     }
                 }
@@ -174,15 +178,27 @@ const fall=(map1)=>{
     }
     const score=(map1)=>{
         let cc=0//残っているブロックの数
+        let tensu=1
+        let kakeru=0
         //色のあるブロックの数を数える
-        for(let i=0;i<10;i++){
-            for(let r=0;r<10;r++){
+        for(let i=0;i<tate;i++){
+            for(let r=0;r<yoko;r++){
                 if(map1[i][r]!=10){
                     cc+=1
                 }
             }
         }
-        return cc
+        if(cc<=10){
+            kakeru=10-cc
+            for(let i=0;i<kakeru;i++){
+                tensu=tensu*2
+            }
+        }
+        else{
+            tensu=0
+        }
+        //10枚以上０点、９枚１点、８枚２点、７枚４点...
+        return tensu
     }
     canvas.addEventListener('mousedown', function(event) {
         const x = event.offsetX;
@@ -196,8 +212,8 @@ const fall=(map1)=>{
         if(map1[my][mx]!==10){
             check(map1,mx,my)
         }
-        console.log(map1)
         map1=fall(map1)
+        console.log("@202"+map1)
         map1=send(map1)
         let isTumi=referee(map1)
         let tensu=score(map1)
@@ -221,6 +237,14 @@ const fall=(map1)=>{
                     ctx.fillStyle = 'green';
                     ctx.fillRect(u*50,i*50,50,50);
                 };
+                if(map1[i][u]==3){
+                    ctx.fillStyle = 'yellow';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };
+                if(map1[i][u]==4){
+                    ctx.fillStyle = 'purple';
+                    ctx.fillRect(u*50,i*50,50,50);
+                };                
                 if(map1[i][u]==10){
                     ctx.fillStyle = 'white';
                     ctx.fillRect(u*50,i*50,50,50);
